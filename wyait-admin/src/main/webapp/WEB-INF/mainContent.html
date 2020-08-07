@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>wyait后台管理</title>
+</head>
+<body>
+<div class="layui-body">
+    <div class="layui-container">
+        <div class="layui-row">
+        <div class="layui-col-xs9">
+            &nbsp;
+            <h1 style="padding-top:50px;line-height:2.0;"><shiro:principal property="username"></shiro:principal>，欢迎您登录
+                <a href="http://blog.51cto.com/wyait"><span style="font-weight: bold;font-size:28px;">后台管理系统</span></a></h1>
+            <p><font style="font-size: 18px;">博客链接：</font><a href="http://blog.51cto.com/wyait"><span style="font-weight: bold;font-size:20px;color:blue">http://blog.51cto.com/wyait</span></a>
+            </p>
+            <p>
+                普通请求异常：
+                <a href="/error/getError">点击</a>
+            </p>
+            <p>
+                ajax异步请求异常：
+                <a href="javascript:void(0)" onclick="ajaxError()">点击</a>
+            </p>
+        </div>
+<hr class="layui-bg-blue"/>       
+        <shiro:hasRole name="superman"> 
+	    <a href="/user/userList"> superman </a>
+
+        </shiro:hasRole>
+<hr class="layui-bg-blue"/>
+
+	<shiro:hasRole name="bdmanage"> 
+	    <a href="/user/userList"> bdmanage </a> 
+	</shiro:hasRole>
+<hr class="layui-bg-blue"/>
+
+	<shiro:lacksRole name="superman"> 
+	    Sorry, you are not allowed to administer the system. 
+	</shiro:lacksRole>
+<hr class="layui-bg-blue"/>
+
+	<shiro:hasPermission name="setUserPermission"> 
+	    <a href="/user/userList">Create a new User</a> 
+	</shiro:hasPermission>
+<hr class="layui-bg-blue"/>
+    </div>
+    </div>
+</div>
+
+</body>
+</html>

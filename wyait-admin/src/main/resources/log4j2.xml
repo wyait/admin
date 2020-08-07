@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <!-- 缺省配置（用于开发环境），配置日志文件输出目录和动态参数。其他环境需要在VM参数中指定； “sys:”表示：如果VM参数中没指定这个变量值，则使用本文件中定义的缺省全局变量值 -->
+        <Property name="instance">wyait-admin</Property>
+        <Property name="log.dir">D:\log\admin-logs</Property>
+    </Properties>
+    <!-- 定义所有的appender -->
+    <Appenders>
+
+        <!--这个输出控制台的配置 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+            <!--输出日志的格式 -->
+            <PatternLayout
+                    pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%level][%class][%line][%X{traceId}]:%message%n"/>
+        </Console>
+        <RollingRandomAccessFile name="infoLog"
+                                 fileName="${log.dir}/${instance}-info.log"
+                                 filePattern="${log.dir}/%d{yyyy-MM}/${instance}-info-%d{yyyy-MM-dd}-%i.log.gz"
+                                 append="true">
+            <PatternLayout
+                    pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%level][%class][%line][%X{traceId}]:%message%n"/>
+            <Filters>
+                <ThresholdFilter level="info" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"
+                                           modulate="true"/>
+                <SizeBasedTriggeringPolicy size="200MB"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${log.dir}" maxDepth="2">
+                    <IfFileName glob="*/wyait-*.log.gz"/>
+                    <IfLastModified age="90D"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <!-- warn级别的日志信息 -->
+        <RollingRandomAccessFile name="warnLog"
+                                 fileName="${log.dir}/${instance}-warn.log"
+                                 filePattern="${log.dir}/%d{yyyy-MM}/${instance}-warn-%d{yyyy-MM-dd}-%i.log.gz"
+                                 append="true">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY"
+                                 onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout
+                    pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%level][%class][%line][%X{traceId}]:%message%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"
+                                           modulate="true"/>
+                <SizeBasedTriggeringPolicy size="200MB"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <!-- error级别的日志信息 -->
+        <RollingRandomAccessFile name="errorLog"
+                                 fileName="${log.dir}/${instance}-error.log"
+                                 filePattern="${log.dir}/%d{yyyy-MM}/${instance}-error-%d{yyyy-MM-dd}-%i.log.gz"
+                                 append="true">
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout
+                    pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%level][%class][%line][%X{traceId}]:%message%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"
+                                           modulate="true"/>
+                <SizeBasedTriggeringPolicy size="200MB"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers> <!-- 第三方的软件日志级别 -->
+        <logger name="org.springframework" level="debug" additivity="true">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="infoLog"/>
+            <AppenderRef ref="warnLog"/>
+            <AppenderRef ref="errorLog"/>
+        </logger>
+        <logger name="java.sql.PreparedStatement" level="debug"
+                additivity="true">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="infoLog"/>
+        </logger>
+        <!-- root logger 配置 -->
+        <Root level="debug" includeLocation="true">
+            <AppenderRef ref="infoLog"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="errorLog"/>
+        </Root>
+        <!-- AsyncRoot - 异步记录日志 - 需要LMAX Disruptor的支持 -->
+        <!-- <AsyncRoot level="info" additivity="false"> <AppenderRef ref="Console"
+            /> <AppenderRef ref="infoLog" /> <AppenderRef ref="errorLog" /> </AsyncRoot> -->
+    </Loggers>
+</Configuration>
+
