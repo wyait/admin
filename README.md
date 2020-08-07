@@ -5,7 +5,7 @@ springboot 2.1 + shiro + redis + layUI 后台权限管理系统
 
 ## springboot 2.1版本
 
-[ **wyait-admin** ](https://github.com/wyait/admin.git)：【博客】[spring boot 2.1 + mybatis + shiro + layui 搭建的后台权限管理系统；http://blog.51cto.com/wyait/2082803](http://blog.51cto.com/wyait/2082803)；
+[ **wyait-admin** ](https://github.com/wyait/admin.git)：【博客】[spring boot 2.1 + mybatis + shiro + layui 搭建的后台权限管理系统；https://www.toutiao.com/i6857783244210110983/](https://www.toutiao.com/i6857783244210110983/)；
 
 ## springboot 1.5版本
 
