@@ -30,6 +30,8 @@ springboot 2.1 + shiro + redis + layUI 后台权限管理系统
 9. 请求乱码问题解决；  
 10. 统一异常处理。
 
-**wyait.sql**: sql数据库语句源码
+## wyait.sql
+wyait.sql：sql数据库语句源码
 
 **爱生活，爱工作，爱你们！**
+
